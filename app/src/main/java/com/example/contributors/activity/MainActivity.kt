@@ -1,8 +1,9 @@
-package com.example.contributors
+package com.example.contributors.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.example.contributors.ui.main.MainFragment
+import com.example.contributors.R
+import com.example.contributors.fragments.MainFragment
 
 class MainActivity : AppCompatActivity() {
 
