@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import com.example.contributors.adapter.ContributorsAdapter
 import com.example.contributors.databinding.MainFragmentBinding
 import com.example.contributors.viewModel.MainViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -18,13 +19,23 @@ class MainFragment : Fragment() {
     }
 
     private val viewModel by viewModels<MainViewModel>()
+    private lateinit var binding: MainFragmentBinding
 
+    private lateinit var listAdapter: ContributorsAdapter
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
-        val binding: MainFragmentBinding = MainFragmentBinding.inflate(layoutInflater)
-        binding.lifecycleOwner = this
-        binding.viewModel = viewModel
+        MainFragmentBinding.inflate(layoutInflater)
+        binding = MainFragmentBinding.inflate(inflater, container, false).apply {
+            viewModel = viewModel
+        }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
+        listAdapter = ContributorsAdapter(viewModel, this)
+        binding.categoryRecycle.adapter = listAdapter
     }
 }
