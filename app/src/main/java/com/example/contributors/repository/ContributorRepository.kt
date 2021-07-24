@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class ContributorsRepository @Inject constructor () {
+class ContributorRepository @Inject constructor () {
 
     private val httpBuilder: OkHttpClient.Builder get() {
         val httpClient = OkHttpClient.Builder()
@@ -37,13 +37,13 @@ class ContributorsRepository @Inject constructor () {
     private val BASE_URL = "https://api.github.com/"
 
     @Provides
-    fun createService(): ContributorsService {
+    fun createService(): ContributorService {
         val client = httpBuilder.build()
         val retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
-        return retrofit.create(ContributorsService::class.java)
+        return retrofit.create(ContributorService::class.java)
     }
 }
