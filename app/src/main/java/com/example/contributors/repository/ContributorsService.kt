@@ -1,5 +1,6 @@
 package com.example.contributors.repository
 
+import com.example.contributors.model.Contributor
 import retrofit2.Call
 import retrofit2.http.GET
 
