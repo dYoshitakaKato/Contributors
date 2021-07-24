@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.example.contributors.R
 import com.example.contributors.model.ContributorDetail
 import com.example.contributors.repository.ContributorRepository
+import com.example.contributors.util.Event
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -19,8 +20,8 @@ class DetailViewModel @AssistedInject constructor(private val repository: Contri
     private val _dataLoading = MutableLiveData<Boolean>(false)
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    private val _snackbarText = MutableLiveData<String>("")
-    val snackbarText: LiveData<String> = _snackbarText
+    private val _snackbarText = MutableLiveData<Event<String>>()
+    val snackbarText: LiveData<Event<String>> = _snackbarText
 
     private val _model = MutableLiveData<ContributorDetail>()
     val model: LiveData<ContributorDetail> = _model
@@ -35,7 +36,7 @@ class DetailViewModel @AssistedInject constructor(private val repository: Contri
                 _model.postValue(body)
                 return@launch
             }
-            _snackbarText.postValue(context.getString(R.string.deta_load_error_message))
+            _snackbarText.postValue(Event(context.getString(R.string.deta_load_error_message)))
         }
     }
 

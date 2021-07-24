@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.contributors.R
 import com.example.contributors.model.Contributor
 import com.example.contributors.repository.ContributorRepository
+import com.example.contributors.util.Event
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +24,8 @@ class MainViewModel @Inject constructor(private val repository: ContributorRepos
     private val _dataLoading = MutableLiveData(false)
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    private val _snackbarText = MutableLiveData("")
-    val snackbarText: LiveData<String> = _snackbarText
+    private val _snackbarText = MutableLiveData<Event<String>>()
+    val snackbarText: LiveData<Event<String>> = _snackbarText
 
     private val _openDetail = MutableLiveData<Event<String>>()
     val openDetail: LiveData<Event<String>> = _openDetail
@@ -39,7 +40,7 @@ class MainViewModel @Inject constructor(private val repository: ContributorRepos
                 _items.postValue(body)
                 return@launch
             }
-            _snackbarText.postValue(context.getString(R.string.deta_load_error_message))
+            _snackbarText.postValue(Event(context.getString(R.string.deta_load_error_message)))
         }
     }
 

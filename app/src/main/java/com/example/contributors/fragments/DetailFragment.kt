@@ -12,7 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.navArgs
 import com.example.contributors.R
 import com.example.contributors.databinding.DetailFragmentBinding
-import com.example.contributors.databinding.MainFragmentBinding
+import com.example.contributors.util.EventObserver
 import com.example.contributors.viewModel.DetailViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -51,9 +51,9 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         binding.lifecycleOwner = this
-        detailViewModel.snackbarText.observe(viewLifecycleOwner, Observer {
+        detailViewModel.snackbarText.observe(viewLifecycleOwner, EventObserver {
             if (it == "") {
-                return@Observer
+                return@EventObserver
             }
             Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
         })

@@ -10,16 +10,13 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.contributors.adapter.ContributorsAdapter
 import com.example.contributors.databinding.MainFragmentBinding
+import com.example.contributors.util.EventObserver
 import com.example.contributors.viewModel.MainViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class MainFragment : Fragment() {
-
-    companion object {
-        fun newInstance() = MainFragment()
-    }
 
     private val mainViewModel by viewModels<MainViewModel>()
     private lateinit var binding: MainFragmentBinding
@@ -47,9 +44,9 @@ class MainFragment : Fragment() {
         mainViewModel.items.observe(viewLifecycleOwner, Observer{
             listAdapter.submitList(it)
         })
-        mainViewModel.snackbarText.observe(viewLifecycleOwner, Observer {
+        mainViewModel.snackbarText.observe(viewLifecycleOwner, EventObserver {
             if (it == "") {
-                return@Observer
+                return@EventObserver
             }
             Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
         })
