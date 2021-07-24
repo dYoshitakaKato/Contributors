@@ -53,9 +53,9 @@ class MainFragment : Fragment() {
             }
             Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
         })
-        mainViewModel.openDetail.observe(viewLifecycleOwner, Observer {
+        mainViewModel.openDetail.observe(viewLifecycleOwner, EventObserver {
             if (it == "") {
-                return@Observer
+                return@EventObserver
             }
             navigateDetail(it)
         })

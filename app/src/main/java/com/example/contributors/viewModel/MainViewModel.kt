@@ -26,8 +26,8 @@ class MainViewModel @Inject constructor(private val repository: ContributorRepos
     private val _snackbarText = MutableLiveData("")
     val snackbarText: LiveData<String> = _snackbarText
 
-    private val _openDetail = MutableLiveData("")
-    val openDetail: LiveData<String> = _openDetail
+    private val _openDetail = MutableLiveData<Event<String>>()
+    val openDetail: LiveData<Event<String>> = _openDetail
 
     fun load() {
         _dataLoading.value = true
@@ -44,6 +44,6 @@ class MainViewModel @Inject constructor(private val repository: ContributorRepos
     }
 
     fun openDetail(taskId: String) {
-        _openDetail.value = taskId
+        _openDetail.value = Event(taskId)
     }
 }
