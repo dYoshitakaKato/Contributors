@@ -26,6 +26,9 @@ class MainViewModel @Inject constructor(private val repository: ContributorRepos
     private val _snackbarText = MutableLiveData("")
     val snackbarText: LiveData<String> = _snackbarText
 
+    private val _openDetail = MutableLiveData("")
+    val openDetail: LiveData<String> = _openDetail
+
     fun load() {
         _dataLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
@@ -38,5 +41,9 @@ class MainViewModel @Inject constructor(private val repository: ContributorRepos
             }
             _snackbarText.postValue(context.getString(R.string.deta_load_error_message))
         }
+    }
+
+    fun openDetail(taskId: String) {
+        _openDetail.value = taskId
     }
 }

@@ -47,5 +47,14 @@ class MainFragment : Fragment() {
             }
             Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
         })
+        mainViewModel.openDetail.observe(viewLifecycleOwner, Observer {
+            if (it == "") {
+                return@Observer
+            }
+            navigateDetail(it)
+        })
+    }
+
+    private fun navigateDetail(login: String) {
     }
 }
