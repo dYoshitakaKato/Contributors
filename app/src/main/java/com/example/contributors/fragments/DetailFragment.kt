@@ -21,9 +21,6 @@ private val LOGIN_KEY = "login-key"
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
 
-    private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean> = _dataLoading
-
     companion object {
         fun newInstance(login: String): DetailFragment {
             val fragment = DetailFragment()

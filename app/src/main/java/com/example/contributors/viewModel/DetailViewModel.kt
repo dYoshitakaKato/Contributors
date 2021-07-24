@@ -18,8 +18,10 @@ class DetailViewModel @AssistedInject constructor(private val repository: Contri
     val model: LiveData<ContributorDetail> = _model
 
     fun load(){
+        _dataLoading.value = true
         viewModelScope.launch(Dispatchers.IO) {
             val response = repository.createService().fetchDetail(login)
+            _dataLoading.postValue(false)
             if (response.isSuccessful) {
                 val body = response.body() ?: return@launch
                 _model.postValue(body)
