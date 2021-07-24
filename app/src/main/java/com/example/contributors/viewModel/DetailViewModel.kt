@@ -1,6 +1,7 @@
 package com.example.contributors.viewModel
 
 import androidx.lifecycle.*
+import com.example.contributors.model.ContributorDetail
 import com.example.contributors.repository.ContributorRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -13,9 +14,17 @@ class DetailViewModel @AssistedInject constructor(private val repository: Contri
     private val _dataLoading = MutableLiveData<Boolean>(false)
     val dataLoading: LiveData<Boolean> = _dataLoading
 
+    private val _model = MutableLiveData<ContributorDetail>()
+    val model: LiveData<ContributorDetail> = _model
+
     fun load(){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.createService().fetchDetail(login)
+            val response = repository.createService().fetchDetail(login)
+            if (response.isSuccessful) {
+                val body = response.body() ?: return@launch
+                _model.postValue(body)
+                return@launch
+            }
         }
     }
 

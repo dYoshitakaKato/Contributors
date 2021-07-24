@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import com.example.contributors.R
 import com.example.contributors.databinding.DetailFragmentBinding
 import com.example.contributors.databinding.MainFragmentBinding
@@ -55,5 +56,10 @@ class DetailFragment : Fragment() {
             viewModel = detailViewModel
         }
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        detailViewModel.load()
     }
 }
