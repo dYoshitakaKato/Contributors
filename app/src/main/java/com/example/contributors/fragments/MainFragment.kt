@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.example.contributors.adapter.ContributorsAdapter
 import com.example.contributors.databinding.MainFragmentBinding
 import com.example.contributors.viewModel.MainViewModel
@@ -24,6 +25,11 @@ class MainFragment : Fragment() {
     private lateinit var binding: MainFragmentBinding
 
     private lateinit var listAdapter: ContributorsAdapter
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        mainViewModel.load()
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View {
@@ -56,5 +62,7 @@ class MainFragment : Fragment() {
     }
 
     private fun navigateDetail(login: String) {
+        val action = MainFragmentDirections.actionMainToDetail(login)
+        findNavController().navigate(action)
     }
 }

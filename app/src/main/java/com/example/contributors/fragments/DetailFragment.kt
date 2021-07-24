@@ -9,6 +9,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.navArgs
 import com.example.contributors.R
 import com.example.contributors.databinding.DetailFragmentBinding
 import com.example.contributors.databinding.MainFragmentBinding
@@ -21,26 +22,14 @@ private val LOGIN_KEY = "login-key"
 
 @AndroidEntryPoint
 class DetailFragment : Fragment() {
-
-    private val _dataLoading = MutableLiveData<Boolean>()
-    val dataLoading: LiveData<Boolean> = _dataLoading
-
-    companion object {
-        fun newInstance(login: String): DetailFragment {
-            val fragment = DetailFragment()
-            val args = Bundle()
-            args.putString(LOGIN_KEY, login)
-            fragment.arguments = args
-            return fragment
-        }
-    }
+    private val args: DetailFragmentArgs by navArgs()
 
     private lateinit var login: String
     private lateinit var binding: DetailFragmentBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        login = requireArguments().getString(LOGIN_KEY, "")
+        login = args.login
     }
 
     @Inject
