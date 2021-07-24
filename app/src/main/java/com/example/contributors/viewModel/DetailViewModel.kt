@@ -1,16 +1,21 @@
 package com.example.contributors.viewModel
 
+import android.content.Context
 import androidx.lifecycle.*
+import com.example.contributors.R
 import com.example.contributors.model.ContributorDetail
 import com.example.contributors.repository.ContributorRepository
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class DetailViewModel @AssistedInject constructor(private val repository: ContributorRepository,
-                                                  @Assisted private val login: String)  : ViewModel() {
+                                                  @Assisted private val login: String,
+                                                  @ApplicationContext private val context: Context)
+    : ViewModel() {
     private val _dataLoading = MutableLiveData<Boolean>(false)
     val dataLoading: LiveData<Boolean> = _dataLoading
 
@@ -30,7 +35,7 @@ class DetailViewModel @AssistedInject constructor(private val repository: Contri
                 _model.postValue(body)
                 return@launch
             }
-            _snackbarText.postValue("データ取得エラー")
+            _snackbarText.postValue(context.getString(R.string.deta_load_error_message))
         }
     }
 
