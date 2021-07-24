@@ -13,6 +13,7 @@ import com.example.contributors.R
 import com.example.contributors.databinding.DetailFragmentBinding
 import com.example.contributors.databinding.MainFragmentBinding
 import com.example.contributors.viewModel.DetailViewModel
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -56,6 +57,17 @@ class DetailFragment : Fragment() {
             viewModel = detailViewModel
         }
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding.lifecycleOwner = this
+        detailViewModel.snackbarText.observe(viewLifecycleOwner, Observer {
+            if (it == "") {
+                return@Observer
+            }
+            Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
+        })
     }
 
     override fun onResume() {

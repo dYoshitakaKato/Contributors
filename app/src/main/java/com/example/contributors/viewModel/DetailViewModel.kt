@@ -14,6 +14,9 @@ class DetailViewModel @AssistedInject constructor(private val repository: Contri
     private val _dataLoading = MutableLiveData<Boolean>(false)
     val dataLoading: LiveData<Boolean> = _dataLoading
 
+    private val _snackbarText = MutableLiveData<String>("")
+    val snackbarText: LiveData<String> = _snackbarText
+
     private val _model = MutableLiveData<ContributorDetail>()
     val model: LiveData<ContributorDetail> = _model
 
@@ -27,6 +30,7 @@ class DetailViewModel @AssistedInject constructor(private val repository: Contri
                 _model.postValue(body)
                 return@launch
             }
+            _snackbarText.postValue("データ取得エラー")
         }
     }
 
