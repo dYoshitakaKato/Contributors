@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.contributors.fragments.MainFragment"
-        android:label="fragment_one"
+        android:label="Contributors"
         tools:layout="@layout/main_fragment" >
         <action
             android:id="@+id/action_main_to_detail"
@@ -16,7 +16,7 @@
     <fragment
         android:id="@+id/detailFragment"
         android:name="com.example.contributors.fragments.DetailFragment"
-        android:label="fragment_two"
+        android:label="Contributor"
         tools:layout="@layout/detail_fragment" >
         <argument
             android:name="login"
