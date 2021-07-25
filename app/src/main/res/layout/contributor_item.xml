@@ -14,12 +14,13 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:onClick="@{() -> view_model.openDetail(item.login)}"
         tools:context=".fragments.ContributorItemFragment">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:text="Hello" />
+            android:text="@{item.login}" />
 
     </FrameLayout>
 </layout>
