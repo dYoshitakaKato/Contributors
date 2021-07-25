@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">Contributors</string>
+    <string name="deta_load_error_message">データ読み込みエラー</string>
+</resources>
