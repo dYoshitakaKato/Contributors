@@ -25,6 +25,7 @@ class DetailFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         login = args.login
+        detailViewModel.load()
     }
 
     @Inject
@@ -52,10 +53,5 @@ class DetailFragment : Fragment() {
             }
             Snackbar.make(view, it, Snackbar.LENGTH_LONG).show()
         })
-    }
-
-    override fun onResume() {
-        super.onResume()
-        detailViewModel.load()
     }
 }
