@@ -4,6 +4,7 @@ plugins {
     id 'kotlin-kapt'
     id 'dagger.hilt.android.plugin'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'jacoco'
 }
 
 android {
@@ -39,6 +40,9 @@ android {
     // Encapsulates options for running tests.
     testOptions {
         unitTests.includeAndroidResources = true
+    }
+    jacoco {
+        version = "0.8.7"
     }
 }
 
