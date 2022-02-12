@@ -46,6 +46,23 @@ android {
     }
 }
 
+task jacocoTestReport(type: JacocoReport, dependsOn: "connectedDebugAndroidTest") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+    doFirst {
+        new File("$buildDir/intermediates/classes/").eachFileRecurse { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
+    }
+}
+
 dependencies {
     implementation 'com.squareup.okhttp3:okhttp:5.0.0-alpha.4'
     implementation 'com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.4'
