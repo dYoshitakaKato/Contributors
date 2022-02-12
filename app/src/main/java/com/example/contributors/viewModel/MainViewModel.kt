@@ -1,50 +1,43 @@
 package com.example.contributors.viewModel
 
-import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.contributors.R
 import com.example.contributors.model.Contributor
-import com.example.contributors.repository.ContributorRepository
-import com.example.contributors.util.Event
+import com.example.contributors.repository.ContributorsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class MainViewModel @Inject constructor(private val repository: ContributorRepository,
-                                        @ApplicationContext private val context: Context)  : ViewModel() {
+class MainViewModel @Inject constructor()  : ViewModel() {
+
+    @Inject
+    lateinit var contributorsRepository: ContributorsRepository
+
     private val _items = MutableLiveData<List<Contributor>>(ArrayList())
     val items: LiveData<List<Contributor>> = _items
 
     private val _dataLoading = MutableLiveData(false)
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    private val _snackbarText = MutableLiveData<Event<String>>()
-    val snackbarText: LiveData<Event<String>> = _snackbarText
+    private val _message = MutableLiveData<Int>()
+    val message: LiveData<Int> = _message
 
-    private val _openDetail = MutableLiveData<Event<String>>()
-    val openDetail: LiveData<Event<String>> = _openDetail
-
-    fun load() {
-        _dataLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.createService().fetchAll()
+    fun onLoad(dispatcher: CoroutineDispatcher = Dispatchers.IO) {
+        viewModelScope.launch(dispatcher) {
+            _dataLoading.postValue(true)
+            val response = contributorsRepository.get()
             _dataLoading.postValue(false)
-            if (response.isSuccessful) {
-                val body = response.body() ?: return@launch
-                _items.postValue(body)
+            if (response.isSuccess) {
+                with(_items) { postValue(response.responseData) }
                 return@launch
             }
-            _snackbarText.postValue(Event(context.getString(R.string.deta_load_error_message)))
+            _message.postValue(R.string.deta_load_error_message)
         }
-    }
-
-    fun openDetail(taskId: String) {
-        _openDetail.value = Event(taskId)
     }
 }
