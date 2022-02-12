@@ -1,58 +1,43 @@
 package com.example.contributors.viewModel
 
-import android.content.Context
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.contributors.R
 import com.example.contributors.model.ContributorDetail
-import com.example.contributors.repository.ContributorRepository
-import com.example.contributors.util.Event
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
-import dagger.assisted.AssistedInject
-import dagger.hilt.android.qualifiers.ApplicationContext
+import com.example.contributors.repository.ContributorDetailRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class DetailViewModel @AssistedInject constructor(private val repository: ContributorRepository,
-                                                  @Assisted private val login: String,
-                                                  @ApplicationContext private val context: Context)
+@HiltViewModel
+class DetailViewModel @Inject constructor()
     : ViewModel() {
-    private val _dataLoading = MutableLiveData<Boolean>(false)
+    @Inject
+    lateinit var contributorRepository: ContributorDetailRepository
+
+    private val _dataLoading = MutableLiveData(false)
     val dataLoading: LiveData<Boolean> = _dataLoading
 
-    private val _snackbarText = MutableLiveData<Event<String>>()
-    val snackbarText: LiveData<Event<String>> = _snackbarText
+    private val _message = MutableLiveData<Int>()
+    val message: LiveData<Int> = _message
 
     private val _model = MutableLiveData<ContributorDetail>()
     val model: LiveData<ContributorDetail> = _model
 
-    fun load(){
-        _dataLoading.value = true
-        viewModelScope.launch(Dispatchers.IO) {
-            val response = repository.createService().fetchDetail(login)
+    fun onLoad(login: String, dispatcher: CoroutineDispatcher = Dispatchers.IO){
+        viewModelScope.launch(dispatcher) {
+            _dataLoading.postValue(true)
+            val response = contributorRepository.get(login)
             _dataLoading.postValue(false)
-            if (response.isSuccessful) {
-                val body = response.body() ?: return@launch
-                _model.postValue(body)
+            if (response.isSuccess) {
+                _model.postValue(response.responseData!!)
                 return@launch
             }
-            _snackbarText.postValue(Event(context.getString(R.string.deta_load_error_message)))
+            _message.postValue(R.string.deta_load_error_message)
         }
-    }
-
-    companion object {
-        fun provideFactory(
-            assistedFactory: Factory,
-            login: String
-        ): ViewModelProvider.Factory = object : ViewModelProvider.Factory {
-            override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-                return assistedFactory.create(login) as T
-            }
-        }
-    }
-
-    @AssistedFactory
-    interface Factory {
-        fun create(login: String): DetailViewModel
     }
 }

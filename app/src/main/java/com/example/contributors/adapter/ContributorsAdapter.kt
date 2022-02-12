@@ -1,13 +1,15 @@
 package com.example.contributors.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.findViewTreeLifecycleOwner
+import androidx.navigation.findNavController
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.contributors.databinding.ContributorItemBinding
+import com.example.contributors.fragments.MainFragmentDirections
 import com.example.contributors.model.Contributor
 import com.example.contributors.viewModel.MainViewModel
 
@@ -31,20 +33,27 @@ class ContributorsAdapter(private val viewModel: MainViewModel, private val pare
 
     override fun onBindViewHolder(holder: ContributorsHolder, position: Int) {
         val item = getItem(position)
-        holder.bind(viewModel, parentLifecycleOwner, item)
+        holder.bind(createOnClickListener(item.login), parentLifecycleOwner, item)
+    }
+
+    private fun createOnClickListener(login: String): View.OnClickListener {
+        return View.OnClickListener {
+            val action = MainFragmentDirections.actionMainToDetail(login)
+            it.findNavController().navigate(action)
+        }
     }
 }
 
 class ContributorsHolder(private var binding: ContributorItemBinding) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(
-        viewModel: MainViewModel,
+        clickListener: View.OnClickListener,
         lifecycleOwner: LifecycleOwner,
         item: Contributor
     ) {
         binding.item = item
         binding.lifecycleOwner = lifecycleOwner
-        binding.viewModel = viewModel
+        binding.clickListener = clickListener
         binding.executePendingBindings()
     }
 

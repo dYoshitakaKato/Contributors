@@ -1,7 +1,6 @@
 package com.example.contributors.repository
 
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
 import okhttp3.Interceptor
@@ -13,8 +12,7 @@ import javax.inject.Inject
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class ContributorRepository @Inject constructor () {
-
+class ContributorRepository @Inject constructor() {
     private val httpBuilder: OkHttpClient.Builder get() {
         val httpClient = OkHttpClient.Builder()
         httpClient.addInterceptor(Interceptor { chain ->
@@ -34,13 +32,12 @@ class ContributorRepository @Inject constructor () {
         return httpClient
     }
 
-    private val BASE_URL = "https://api.github.com/"
+    private val baseUrl = "https://api.github.com/"
 
-    @Provides
     fun createService(): ContributorService {
         val client = httpBuilder.build()
         val retrofit = Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .addConverterFactory(GsonConverterFactory.create())
             .client(client)
             .build()
