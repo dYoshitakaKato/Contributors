@@ -1,3 +1,5 @@
+name Danger
+
 workflow "DangerPullRequest" {
   on = "pull_request"
   resolves = ["Danger"]
