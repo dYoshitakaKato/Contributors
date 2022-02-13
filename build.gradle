@@ -3,14 +3,19 @@ buildscript {
     repositories {
         google()
         mavenCentral()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:7.1.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.6.10"
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.40.5'
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:2.5.0-alpha02"
+        classpath "org.jlleitschuh.gradle:ktlint-gradle:10.2.1"
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
+        classpath 'io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.19.0'
     }
 }
 
@@ -23,4 +28,17 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    mainClass.set("com.pinterest.ktlint.Main")
+    args "src/**/*.kt"
+    // to generate report in checkstyle format prepend following args:
+    // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
+    // to add a baseline to check against prepend following args:
+    // "--baseline=ktlint-baseline.xml"
+    // see https://github.com/pinterest/ktlint#usage for more
 }
