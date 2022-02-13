@@ -226,21 +226,26 @@ jobs:
     steps:
     # チェックアウト
     - uses: actions/checkout@v2
-
+    - name: Setup ruby
+      uses: actions/setup-ruby@v1 # ruby設定用のAction
+      with:
+        ruby-version: '2.6'
+        architecture: 'x64'
+    - name: install danger # dangerはrunでスクリプトを記述する
+      run: |
+        gem install bundler
+        bundle install
     # 静的解析
     - name: Lint with detekt
       run: ./gradlew detekt
 
-    # アーティファクトへアップロード
-    - name: Upload results Artifact
-      uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: results
-        path: |
-          **/build/reports/detekt/**/*
-        if-no-files-found: error
-        retention-days: 14
+    - name: run danger
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # GITHUB_TOKENがデフォで発行されるのでそれをdangerで利用する。
+      # 環境変数についての詳しい話は↓参照
+      # https://help.github.com/en/articles/virtual-environments-for-github-actions
+      run: danger # dangerはgithub actionsに対応しているため実行するだけでOK！
 
   ktlint:
     runs-on: ubuntu-latest
@@ -248,31 +253,21 @@ jobs:
     # チェックアウト
     - uses: actions/checkout@v2
 
-    # インストール
-    - name: Install ktlint
+    - name: Setup ruby
+      uses: actions/setup-ruby@v1 # ruby設定用のAction
+      with:
+        ruby-version: '2.6'
+        architecture: 'x64'
+    - name: install danger # dangerはrunでスクリプトを記述する
       run: |
-        curl -sSLO https://github.com/pinterest/ktlint/releases/download/0.42.1/ktlint
-        chmod a+x ktlint
-        sudo mv ktlint /usr/local/bin/
-
-    # 静的解析
-    - name: Lint with ktlint
-      run: ktlint --reporter=checkstyle,output=build/ktlint-report.xml
-      continue-on-error: true
-
-    # 結果の表示
-    - name: Show results on GitHub
-      uses: yutailang0119/action-ktlint@v1
-      with:
-        xml_path: build/ktlint-report.xml
-
-    # アーティファクトへアップロード
-    - name: Upload results Artifact
-      uses: actions/upload-artifact@v2
-      if: failure()
-      with:
-        name: results
-        path: |
-          **/build/ktlint-report.xml
-        if-no-files-found: error
-        retention-days: 14
+        gem install bundler
+        bundle install
+    - name: run ktlintCheck # ktlintCheckを実行させる
+      run: ./gradlew ktlintCheck
+    - name: run danger
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      # GITHUB_TOKENがデフォで発行されるのでそれをdangerで利用する。
+      # 環境変数についての詳しい話は↓参照
+      # https://help.github.com/en/articles/virtual-environments-for-github-actions
+      run: danger # dangerはgithub actionsに対応しているため実行するだけでOK！
