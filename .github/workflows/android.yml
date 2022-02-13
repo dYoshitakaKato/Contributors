@@ -11,6 +11,7 @@ on:
       - LICENSE
   pull_request:
     branches:
+      - main
       - develop
     paths-ignore:
       - docs/**
