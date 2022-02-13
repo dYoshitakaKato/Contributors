@@ -1,0 +1,16 @@
+workflow "DangerPullRequest" {
+  on = "pull_request"
+  resolves = ["Danger"]
+}
+
+action "Detekt" {
+  uses = "docker://adoptopenjdk/openjdk8:alpine"
+  runs = "./gradlew"
+  args = "detekt" ← ktlint or 併用でも適宜読み替えてください
+}
+
+action "Danger" {
+  uses = "u-nation/GithubActions/danger@master"
+  needs = "Detekt"
+  secrets = ["GITHUB_TOKEN"]
+}
