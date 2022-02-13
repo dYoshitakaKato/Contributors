@@ -97,48 +97,89 @@ jobs:
         retention-days: 14
   
   androidTest:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        api-level: [29, 30, 31]
     steps:
-    # チェックアウト
-    - uses: actions/checkout@v2
-    - uses: malinskiy/action-android/emulator-run-cmd@release/0.1.2
-      with:
-        cmd: ./gradlew connectedAndroidTest
-        api: 25
-        tag: default
-        abi: x86
+      - name: checkout
+        uses: actions/checkout@v2
 
-    - name: Save logcat output
-      uses: actions/upload-artifact@master
-      if: failure()
-      with:
-        name: logcat
-        path: artifacts/logcat.log
+      - name: Gradle cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }}-${{ hashFiles('**/buildSrc/**/*.kt') }}
 
+      - name: AVD cache
+        uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+          key: avd-${{ matrix.api-level }}
 
-    # コードカバレッジをJaCoCo形式で取得
-    - name: Get code coverage for JaCoCo
-      run: ./gradlew jacocoAndroidTestReport
+      - name: create AVD and generate snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
 
-    # コードカバレッジをCodecovへアップロード
-    - name: Upload code coverage to Codecov
-      run: bash <(curl -s https://codecov.io/bash)
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      - name: run tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew connectedCheck 
 
-    # テスト結果とコードカバレッジのアップロード
-    - name: Upload test results and code coverage Artifact
-      uses: actions/upload-artifact@v2
-      if: success() || failure()
-      with:
-        name: results
-        path: |
-          **/build/reports/tests/**/*
-          **/build/reports/test-results/**/*
-          **/build/reports/jacoco/**/*
-        if-no-files-found: warn
-        retention-days: 14
+      - name: run androidTests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          force-avd-creation: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: true
+          script: ./gradlew connectedAndroidTest
+        
+      - name: Save logcat output
+        uses: actions/upload-artifact@master
+        if: failure()
+        with:
+          name: logcat
+          path: artifacts/logcat.log 
     
+      # コードカバレッジをJaCoCo形式で取得
+      - name: Get code coverage for JaCoCo
+        run: ./gradlew jacocoAndroidTestReport
+
+      # コードカバレッジをCodecovへアップロード
+      - name: Upload code coverage to Codecov
+        run: bash <(curl -s https://codecov.io/bash)
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+      # テスト結果とコードカバレッジのアップロード
+      - name: Upload test results and code coverage Artifact
+        uses: actions/upload-artifact@v2
+        if: success() || failure()
+        with:
+          name: results
+          path: |
+            **/build/reports/tests/**/*
+            **/build/reports/test-results/**/*
+            **/build/reports/jacoco/**/*
+          if-no-files-found: warn
+          retention-days: 14
+
   lint:
     runs-on: ubuntu-latest
     steps:
