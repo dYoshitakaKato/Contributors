@@ -139,7 +139,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedCheck 
+          script: ./gradlew connectedCheck --stacktrace 
 
       - name: run androidTests
         uses: reactivecircus/android-emulator-runner@v2
@@ -148,7 +148,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedAndroidTest
+          script: ./gradlew connectedAndroidTest --stacktrace 
         
       - name: Save logcat output
         uses: actions/upload-artifact@master
