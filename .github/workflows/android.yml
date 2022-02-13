@@ -230,11 +230,10 @@ jobs:
       uses: actions/setup-ruby@v1 # ruby設定用のAction
       with:
         ruby-version: '2.6'
-        architecture: 'x64'
     - name: install danger # dangerはrunでスクリプトを記述する
       run: |
         gem install bundler
-        bundle install
+        bundle install --jobs 4 --retry 3
     # 静的解析
     - name: Lint with detekt
       run: ./gradlew detekt
@@ -257,11 +256,10 @@ jobs:
       uses: actions/setup-ruby@v1 # ruby設定用のAction
       with:
         ruby-version: '2.6'
-        architecture: 'x64'
     - name: install danger # dangerはrunでスクリプトを記述する
       run: |
         gem install bundler
-        bundle install
+        bundle install --jobs 4 --retry 3
     - name: run ktlintCheck # ktlintCheckを実行させる
       run: ./gradlew ktlintCheck
     - name: run danger
