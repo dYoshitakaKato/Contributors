@@ -50,7 +50,7 @@ android {
     }
 }
 
-task jacocoTestReport(type: JacocoReport, dependsOn: "test") {
+task jacocoUnitTestReport(type: JacocoReport, dependsOn: "test") {
     group = "Reporting"
     description = "Generate Jacoco coverage reports after running tests."
     reports {
@@ -66,6 +66,24 @@ task jacocoTestReport(type: JacocoReport, dependsOn: "test") {
         }
     }
 }
+
+task jacocoAndroidTestReport(type: JacocoReport, dependsOn: "connectedAndroidTest") {
+    group = "Reporting"
+    description = "Generate Jacoco coverage reports after running tests."
+    reports {
+        xml.required = false
+        csv.required = false
+        html.outputLocation = layout.buildDirectory.dir('jacocoHtml')
+    }
+    doFirst {
+        new File("$buildDir/intermediates/classes/").eachFileRecurse { file ->
+            if (file.name.contains('$$')) {
+                file.renameTo(file.path.replace('$$', '$'))
+            }
+        }
+    }
+}
+
 
 detekt {
      buildUponDefaultConfig = true
