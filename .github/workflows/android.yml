@@ -269,3 +269,13 @@ jobs:
       # 環境変数についての詳しい話は↓参照
       # https://help.github.com/en/articles/virtual-environments-for-github-actions
       run: danger # dangerはgithub actionsに対応しているため実行するだけでOK！
+
+  danger:
+    runs-on: ubuntu-latest
+    name: "Run Danger"
+    steps:
+      - uses: actions/checkout@v1
+      - name: Danger
+        uses: danger/kotlin@1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
