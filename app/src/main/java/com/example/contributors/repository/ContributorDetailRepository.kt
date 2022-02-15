@@ -9,9 +9,9 @@ import javax.inject.Inject
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class ContributorDetailRepository @Inject constructor()  {
+class ContributorDetailRepository @Inject constructor() {
     @Inject
-    lateinit var composite : ContributorRepository
+    lateinit var composite: ContributorRepository
 
     suspend fun get(id: String): Response<ContributorDetail?> {
         val response = composite.createService().fetchDetail(id)

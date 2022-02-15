@@ -18,14 +18,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:onClick="@{clickListener}"
-        android:foreground="?android:attr/selectableItemBackground"
+        android:foreground="?attr/selectableItemBackground"
         tools:context=".fragments.ContributorItemFragment">
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/avatar_url"
             android:layout_width="60dp"
             android:layout_height="60dp"
             app:shapeAppearanceOverlay="@style/circleImageView"
-            app:imageUrl="@{item.avatar_url}" />
+            app:imageUrl="@{item.avatarUrl}" />
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_marginStart="10dp"
             android:layout_marginEnd="5dp"

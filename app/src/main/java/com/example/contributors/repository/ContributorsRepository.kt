@@ -9,10 +9,10 @@ import javax.inject.Inject
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class ContributorsRepository @Inject constructor () {
+class ContributorsRepository @Inject constructor() {
 
     @Inject
-    lateinit var composite : ContributorRepository
+    lateinit var composite: ContributorRepository
 
     suspend fun get(): Response<List<Contributor>> {
         val response = composite.createService().fetchAll()

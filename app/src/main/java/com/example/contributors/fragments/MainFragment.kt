@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import com.example.contributors.adapter.ContributorsAdapter
 import com.example.contributors.databinding.MainFragmentBinding
 import com.example.contributors.viewModel.MainViewModel
@@ -26,8 +25,11 @@ class MainFragment : Fragment() {
         mainViewModel.onLoad()
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
-                              savedInstanceState: Bundle?): View {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
         binding = MainFragmentBinding.inflate(inflater, container, false).apply {
             viewModel = mainViewModel
         }

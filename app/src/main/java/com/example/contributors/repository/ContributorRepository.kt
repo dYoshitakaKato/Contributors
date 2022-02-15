@@ -1,5 +1,7 @@
 package com.example.contributors.repository
 
+import com.google.gson.FieldNamingPolicy
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ActivityRetainedComponent
@@ -15,15 +17,16 @@ import javax.inject.Inject
 class ContributorRepository @Inject constructor() {
     private val httpBuilder: OkHttpClient.Builder get() {
         val httpClient = OkHttpClient.Builder()
-        httpClient.addInterceptor(Interceptor { chain ->
-            val original = chain.request()
-            val request = original.newBuilder()
-                .header("Accept", "application/json")
-                .method(original.method, original.body)
-                .build()
-
-            return@Interceptor chain.proceed(request)
-        }).readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+        httpClient.addInterceptor(
+            Interceptor {
+                val original = it.request()
+                val request = original.newBuilder()
+                    .header("Accept", "application/json")
+                    .method(original.method, original.body)
+                    .build()
+                return@Interceptor it.proceed(request)
+            }
+        ).readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
 
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -36,9 +39,10 @@ class ContributorRepository @Inject constructor() {
 
     fun createService(): ContributorService {
         val client = httpBuilder.build()
+        val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
             .client(client)
             .build()
         return retrofit.create(ContributorService::class.java)
