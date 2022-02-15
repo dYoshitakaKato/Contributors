@@ -24,7 +24,6 @@ class ContributorRepository @Inject constructor() {
                     .header("Accept", "application/json")
                     .method(original.method, original.body)
                     .build()
-
                 return@Interceptor it.proceed(request)
             }
         ).readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
