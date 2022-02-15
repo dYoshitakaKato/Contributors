@@ -12,17 +12,9 @@ Dir.glob("**//build/reports/detekt-checkstyle.xml").each { |report|
   checkstyle_format.base_path = Dir.pwd
   checkstyle_format.report report.to_s
 }
-ktlint.lint
+
 # ktlint
 Dir.glob("**//build/reports/ktlint-results.xml").each { |report|
     checkstyle_format.base_path = Dir.pwd
     checkstyle_format.report report.to_s
-}
-
-# Android Lint
-Dir.glob("**//build/reports/lint-results*.xml").each { |report|
-    android_lint.skip_gradle_task = true
-    android_lint.report_file = report.to_s
-    android_lint.filtering = true
-    android_lint.lint(inline_mode: true)
 }
