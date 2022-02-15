@@ -14,9 +14,9 @@ import javax.inject.Inject
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class ContributorRepository @Inject constructor(private val timeoutValue: Long = 30) {
+class ContributorRepository @Inject constructor() {
 
-    private val httpBuilder: OkHttpClient.Builder get() {
+    private fun httpBuilder(timeoutValue: Long): OkHttpClient.Builder {
         val httpClient = OkHttpClient.Builder().addInterceptor(
             Interceptor {
                 val original = it.request()
@@ -30,14 +30,13 @@ class ContributorRepository @Inject constructor(private val timeoutValue: Long =
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         httpClient.addInterceptor(loggingInterceptor)
-
         return httpClient
     }
 
     private val baseUrl = "https://api.github.com/"
 
-    fun createService(): ContributorService {
-        val client = httpBuilder.build()
+    fun createService(timeoutValue: Long = 30): ContributorService {
+        val client = httpBuilder(timeoutValue).build()
         val gson = GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES).create()
         val retrofit = Retrofit.Builder()
             .baseUrl(baseUrl)
