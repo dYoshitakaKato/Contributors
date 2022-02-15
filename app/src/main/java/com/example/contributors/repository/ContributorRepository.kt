@@ -14,10 +14,10 @@ import javax.inject.Inject
 
 @Module
 @InstallIn(ActivityRetainedComponent::class)
-class ContributorRepository @Inject constructor() {
+class ContributorRepository @Inject constructor(private val timeoutValue: Long = 30) {
+
     private val httpBuilder: OkHttpClient.Builder get() {
-        val httpClient = OkHttpClient.Builder()
-        httpClient.addInterceptor(
+        val httpClient = OkHttpClient.Builder().addInterceptor(
             Interceptor {
                 val original = it.request()
                 val request = original.newBuilder()
@@ -26,8 +26,7 @@ class ContributorRepository @Inject constructor() {
                     .build()
                 return@Interceptor it.proceed(request)
             }
-        ).readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
-
+        ).readTimeout(timeoutValue, java.util.concurrent.TimeUnit.SECONDS)
         val loggingInterceptor = HttpLoggingInterceptor()
         loggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
         httpClient.addInterceptor(loggingInterceptor)
