@@ -234,6 +234,8 @@ jobs:
         key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile') }} # change your gemfile path
         restore-keys: |
           ${{ runner.os }}-gems-
+    - name: Install ktlint
+      run: curl --output /usr/local/bin/ktlint -sL https://github.com/pinterest/ktlint/releases/download/0.43.2/ktlint && chmod a+x /usr/local/bin/ktlint
     - uses: MeilCli/danger-action@v5
       with:
         plugins_file: 'Gemfile'
