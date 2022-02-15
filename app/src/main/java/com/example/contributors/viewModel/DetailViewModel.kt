@@ -14,8 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class DetailViewModel @Inject constructor()
-    : ViewModel() {
+class DetailViewModel @Inject constructor() : ViewModel() {
     @Inject
     lateinit var contributorRepository: ContributorDetailRepository
 
@@ -28,7 +27,7 @@ class DetailViewModel @Inject constructor()
     private val _model = MutableLiveData<ContributorDetail>()
     val model: LiveData<ContributorDetail> = _model
 
-    fun onLoad(login: String, dispatcher: CoroutineDispatcher = Dispatchers.IO){
+    fun onLoad(login: String, dispatcher: CoroutineDispatcher = Dispatchers.IO) {
         viewModelScope.launch(dispatcher) {
             _dataLoading.postValue(true)
             val response = contributorRepository.get(login)
