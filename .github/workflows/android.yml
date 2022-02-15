@@ -139,15 +139,6 @@ jobs:
           disable-animations: false
           script: echo "Generated AVD snapshot for caching."
 
-      - name: run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: ./gradlew connectedCheck --stacktrace 
-
       - name: run androidTests
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -155,7 +146,7 @@ jobs:
           force-avd-creation: false
           emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
           disable-animations: true
-          script: ./gradlew connectedAndroidTest --stacktrace 
+          script: ./gradlew connectedCheck --stacktrace 
         
       - name: Save logcat output
         uses: actions/upload-artifact@master
