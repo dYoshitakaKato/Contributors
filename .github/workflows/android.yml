@@ -221,51 +221,24 @@ jobs:
         if-no-files-found: error
         retention-days: 14
 
-  detekt:
+  danger:
     runs-on: ubuntu-latest
     steps:
-    # チェックアウト
     - uses: actions/checkout@v2
-    - name: Setup ruby
-      uses: actions/setup-ruby@v1 # ruby設定用のAction
+    - uses: actions/setup-ruby@v1
       with:
         ruby-version: '2.6'
-    - name: install danger # dangerはrunでスクリプトを記述する
-      run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3
-    # 静的解析
-    - name: Lint with detekt
-      run: ./gradlew detekt
-
-    - name: run danger
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # GITHUB_TOKENがデフォで発行されるのでそれをdangerで利用する。
-      # 環境変数についての詳しい話は↓参照
-      # https://help.github.com/en/articles/virtual-environments-for-github-actions
-      run: danger # dangerはgithub actionsに対応しているため実行するだけでOK！
-
-  ktlint:
-    runs-on: ubuntu-latest
-    steps:
-    # チェックアウト
-    - uses: actions/checkout@v2
-
-    - name: Setup ruby
-      uses: actions/setup-ruby@v1 # ruby設定用のAction
+    - uses: actions/cache@v1
       with:
-        ruby-version: '2.6'
-    - name: install danger # dangerはrunでスクリプトを記述する
-      run: |
-        gem install bundler
-        bundle install --jobs 4 --retry 3
-    - name: run ktlintCheck # ktlintCheckを実行させる
-      run: ./gradlew ktlintCheck
-    - name: run danger
+        path: vendor/bundle
+        key: ${{ runner.os }}-gems-${{ hashFiles('Gemfile') }} # change your gemfile path
+        restore-keys: |
+          ${{ runner.os }}-gems-
+    - uses: MeilCli/danger-action@v5
+      with:
+        plugins_file: 'Gemfile'
+        install_path: 'vendor/bundle'
+        danger_file: 'Dangerfile'
+        danger_id: 'danger-pr'
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      # GITHUB_TOKENがデフォで発行されるのでそれをdangerで利用する。
-      # 環境変数についての詳しい話は↓参照
-      # https://help.github.com/en/articles/virtual-environments-for-github-actions
-      run: danger # dangerはgithub actionsに対応しているため実行するだけでOK！
+        DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
