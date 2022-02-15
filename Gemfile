@@ -10,3 +10,5 @@ gem 'danger-checkstyle_format'
 gem 'danger-android_lint'
 # Add-on to process detekt result files
 gem 'danger-kotlin_detekt'
+# Add-on to process detekt result files
+gem 'danger-ktlint'
