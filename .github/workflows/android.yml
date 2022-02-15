@@ -46,7 +46,7 @@ jobs:
 
     # コンパイル
     - name: Run Compile
-      run: ./gradlew assembleDebug
+      run: ./gradlew assemble
 
   test:
     runs-on: ubuntu-latest
