@@ -84,7 +84,6 @@ task jacocoAndroidTestReport(type: JacocoReport, dependsOn: "connectedAndroidTes
     }
 }
 
-
 detekt {
      buildUponDefaultConfig = true
      allRules = false
