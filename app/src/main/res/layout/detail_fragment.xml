@@ -31,7 +31,7 @@
             android:layout_height="160dp"
             android:layout_margin="10dp"
             android:visibility="@{view_model.dataLoading ? View.GONE : View.VISIBLE}"
-            app:imageUrl="@{view_model.model.avatar_url}"
+            app:imageUrl="@{view_model.model.avatarUrl}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -120,7 +120,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:text="@{String.valueOf(view_model.model.public_gists)}"
+                    android:text="@{String.valueOf(view_model.model.publicGists)}"
                     app:layout_constraintStart_toEndOf="@+id/star"
                     app:layout_constraintTop_toTopOf="@+id/star"
                     app:layout_constraintBottom_toBottomOf="@+id/star"
@@ -179,17 +179,17 @@
                     app:layout_constraintStart_toStartOf="@+id/map"
                     app:layout_constraintTop_toBottomOf="@+id/map"
                     app:srcCompat="@drawable/ic_twitter"
-                    app:visible="@{view_model.model.twitter_username}" />
+                    app:visible="@{view_model.model.twitterUsername}" />
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/twitter_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
-                    android:text="@{view_model.model.twitter_username}"
+                    android:text="@{view_model.model.twitterUsername}"
                     app:layout_constraintStart_toEndOf="@+id/twitter"
                     app:layout_constraintTop_toTopOf="@+id/twitter"
                     app:layout_constraintBottom_toBottomOf="@+id/twitter"
-                    app:visible="@{view_model.model.twitter_username}"
+                    app:visible="@{view_model.model.twitterUsername}"
                     tools:text="ppvi" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.appcompat.widget.LinearLayoutCompat>
