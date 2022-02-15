@@ -1,3 +1,5 @@
+import io.gitlab.arturbosch.detekt.Detekt
+
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
@@ -78,6 +80,38 @@ task jacocoAndroidTestReport(type: JacocoReport, dependsOn: "connectedAndroidTes
             }
         }
     }
+}
+
+
+apply plugin: "org.jlleitschuh.gradle.ktlint"
+apply plugin: 'io.gitlab.arturbosch.detekt'
+
+detekt {
+    buildUponDefaultConfig = true
+    allRules = true
+    config = files("$projectDir/config/detekt/detekt.yml")
+    baseline = file("$projectDir/config/detekt/baseline.xml")
+}
+
+tasks.withType(Detekt).configureEach {
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        txt.required.set(true)
+        sarif.required.set(true)
+    }
+}
+
+task ktlint(type: JavaExec, group: "verification") {
+    description = "Check Kotlin code style."
+    classpath = configurations.ktlint
+    mainClass.set("com.pinterest.ktlint.Main")
+    args "src/main/**/*.kt"
+    // to generate report in checkstyle format prepend following args:
+    // "--reporter=plain", "--reporter=checkstyle,output=${buildDir}/ktlint.xml"
+    // to add a baseline to check against prepend following args:
+    // "--baseline=ktlint-baseline.xml"
+    // see https://github.com/pinterest/ktlint#usage for more
 }
 
 dependencies {

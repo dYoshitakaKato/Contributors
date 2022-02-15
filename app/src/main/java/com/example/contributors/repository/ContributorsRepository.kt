@@ -17,11 +17,15 @@ class ContributorsRepository @Inject constructor() {
     suspend fun get(): Response<List<Contributor>> {
         val response = composite.createService().fetchAll()
         if (!response.isSuccessful) {
-            return Response(false, ArrayList())
+            return Response(false, emptyList())
         }
+        return response(response)
+    }
+
+    private fun response(response: retrofit2.Response<List<Contributor>>): Response<List<Contributor>> {
         val body = response.body() ?: return Response(
             false,
-            ArrayList()
+            emptyList()
         )
         return Response(true, body)
     }
