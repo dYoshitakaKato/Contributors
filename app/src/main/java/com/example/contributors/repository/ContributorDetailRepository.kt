@@ -18,6 +18,10 @@ class ContributorDetailRepository @Inject constructor() {
         if (!response.isSuccessful) {
             return Response(false, null)
         }
+        return response(response)
+    }
+
+    private fun response(response: retrofit2.Response<ContributorDetail>): Response<ContributorDetail?> {
         if (response.body() == null) {
             return Response(false, null)
         }
